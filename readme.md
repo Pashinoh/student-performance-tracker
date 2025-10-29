@@ -17,4 +17,4 @@ Proyek integrasi OOP & Modularisasi (Minggu 9–10)
 
 2. Jalankan program:
 
-  python app.py
+  - python app.py
