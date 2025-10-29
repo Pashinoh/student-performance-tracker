@@ -1,0 +1,3 @@
+# optional dependencies (bonus)
+rich==13.7.1
+pdoc==14.1.0
