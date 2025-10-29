@@ -12,5 +12,5 @@ Proyek integrasi OOP & Modularisasi (Minggu 9–10)
 1. Buat virtual environment:
 
 python -m venv venv
+
 venv\Scripts\activate # Windows
-source venv/bin/activate # Mac/Linux
