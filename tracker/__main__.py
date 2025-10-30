@@ -8,14 +8,14 @@ def main():
     rk = RekapKelas()
 
     # Tambahkan beberapa contoh mahasiswa
-    rk.tambah_mahasiswa("230101001", "Ana", 92)
+    rk.tambah_mahasiswa("230101001", "Egie", 92)
     rk.set_penilaian("230101001", quiz=90, tugas=85, uts=88, uas=92)
 
-    rk.tambah_mahasiswa("230101002", "Bimo", 80)
+    rk.tambah_mahasiswa("230101002", "Fiko", 80)
     rk.set_penilaian("230101002", quiz=70, tugas=75, uts=68, uas=72)
 
-    rk.tambah_mahasiswa("230101003", "Citra", 60)
-    rk.set_penilaian("230101003", quiz=50, tugas=60, uts=55, uas=58)
+    rk.tambah_mahasiswa("230101003", "Pradipta", 60)
+    rk.set_penilaian("230101003", quiz=98, tugas=89, uts=90, uas=98)
 
     # Buat laporan otomatis
     records = rk.rekap()
