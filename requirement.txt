@@ -1,3 +1,6 @@
-# optional dependencies (bonus)
-rich==13.7.1
-pdoc==14.1.0
+# Student Performance Tracker
+python>=3.8
+
+# Library
+os
+csv
