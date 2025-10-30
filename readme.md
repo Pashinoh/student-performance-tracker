@@ -20,7 +20,7 @@ OOP & Modularization Integration Project (Week 9–10)
 
 * `python app.py`
 
-#### or
+or
 
 * `python -m tracker`
 
