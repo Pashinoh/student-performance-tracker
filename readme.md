@@ -1,16 +1,21 @@
 # Student Performance Tracker
 
-Proyek integrasi OOP & Modularisasi (Minggu 9–10)
+OOP & Modularization Integration Project (Week 9–10)
 
-### Fitur
-- Menyimpan data mahasiswa, presensi, dan nilai.
-- Menghitung nilai akhir & predikat.
-- Menampilkan rekap di terminal.
-- Mengekspor laporan ke file Markdown (`out/report.md`).
+### Features
 
-### Cara Menjalankan
-1. Buat virtual environment:
+* Store student, attendance, and grade data.
+* Calculate final scores & grades.
+* Display summary in the terminal.
+* Export report to a Markdown file (`out/report.md`).
 
-python -m venv venv
-venv\Scripts\activate # Windows
-source venv/bin/activate # Mac/Linux
+### How to Run
+
+1. Create a virtual environment:
+
+* `python -m venv venv`
+* `venv\Scripts\activate`  # Windows
+
+2. Run the program:
+
+* `python app.py`
