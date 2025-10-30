@@ -11,7 +11,7 @@ OOP & Modularization Integration Project (Week 9–10)
 
 ### How to Run
 
-1. Create a virtual environment:
+1. Create a virtual environment: 
 
 * `python -m venv venv`
 * `venv\Scripts\activate`  # Windows
@@ -24,7 +24,7 @@ OOP & Modularization Integration Project (Week 9–10)
 
 * `python -m tracker`
 
-3. Instal dependensi:
+3. Install dependencies:
 
 * `pip install -r requirements.txt`
 
@@ -50,7 +50,7 @@ nim,quiz,tugas,uts,uas
 230101003,75,70,78,80
 ```
 
-### repord.md
+### report.md
 
 ```bash
 # Rekap Nilai Mahasiswa
