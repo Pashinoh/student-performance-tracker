@@ -1,17 +1,17 @@
-"""Kelas RekapKelas: menyimpan daftar mahasiswa dan nilai."""
+"""Kelas RekapKelas: menyimpan seluruh data mahasiswa dan nilai."""
 
 from .mahasiswa import Mahasiswa
 from .penilaian import Penilaian
 
 class RekapKelas:
-    """Mengelola daftar mahasiswa, kehadiran, dan nilai."""
+    """Mengelola data mahasiswa, nilai, dan rekap laporan."""
 
     def __init__(self):
         self._data = {}
 
     def tambah_mahasiswa(self, nim, nama, hadir_persen=0):
         if nim in self._data:
-            raise ValueError(f"Mahasiswa {nim} sudah terdaftar.")
+            raise ValueError("Mahasiswa sudah ada.")
         m = Mahasiswa(nim, nama, hadir_persen)
         p = Penilaian()
         self._data[nim] = {"mhs": m, "nilai": p}
@@ -24,11 +24,19 @@ class RekapKelas:
     def set_penilaian(self, nim, quiz=None, tugas=None, uts=None, uas=None):
         if nim not in self._data:
             raise KeyError("NIM tidak ditemukan.")
-        pen = self._data[nim]["nilai"]
-        if quiz is not None: pen.quiz = quiz
-        if tugas is not None: pen.tugas = tugas
-        if uts is not None: pen.uts = uts
-        if uas is not None: pen.uas = uas
+        p = self._data[nim]["nilai"]
+        if quiz is not None: p.quiz = quiz
+        if tugas is not None: p.tugas = tugas
+        if uts is not None: p.uts = uts
+        if uas is not None: p.uas = uas
+
+    def predikat(self, nilai):
+        n = float(nilai)
+        if n >= 85: return "A"
+        elif n >= 70: return "B"
+        elif n >= 60: return "C"
+        elif n >= 40: return "D"
+        return "E"
 
     def rekap(self):
         records = []
@@ -44,22 +52,17 @@ class RekapKelas:
             })
         return records
 
-    def predikat(self, n):
-        n = float(n)
-        if n >= 85: return "A"
-        elif n >= 70: return "B"
-        elif n >= 60: return "C"
-        elif n >= 40: return "D"
-        else: return "E"
+    def filter_below(self, threshold=70):
+        """Tampilkan hanya mahasiswa dengan nilai akhir di bawah threshold."""
+        return [r for r in self.rekap() if r["nilai_akhir"] < threshold]
 
     def load_attendance_csv(self, path):
         import csv
-        with open(path, newline='', encoding='utf-8') as f:
+        with open(path, newline='', encoding="utf-8") as f:
             for row in csv.DictReader(f):
-                nim = row.get("nim") or row.get("NIM")
-                if not nim: continue
-                nama = row.get("nama") or ""
-                hadir = row.get("hadir_persen") or 0
+                nim = row.get("nim")
+                nama = row.get("nama")
+                hadir = row.get("hadir_persen", 0)
                 if nim not in self._data:
                     self.tambah_mahasiswa(nim, nama, hadir)
                 else:
@@ -67,16 +70,33 @@ class RekapKelas:
 
     def load_grades_csv(self, path):
         import csv
-        with open(path, newline='', encoding='utf-8') as f:
+        with open(path, newline='', encoding="utf-8") as f:
             for row in csv.DictReader(f):
-                nim = row.get("nim") or row.get("NIM")
-                if not nim: continue
+                nim = row.get("nim")
                 if nim not in self._data:
-                    self.tambah_mahasiswa(nim, "(unknown)", 0)
+                    self.tambah_mahasiswa(nim, "(no name)", 0)
                 self.set_penilaian(
                     nim,
-                    quiz=row.get("quiz") or 0,
-                    tugas=row.get("tugas") or 0,
-                    uts=row.get("uts") or 0,
-                    uas=row.get("uas") or 0,
+                    quiz=row.get("quiz", 0),
+                    tugas=row.get("tugas", 0),
+                    uts=row.get("uts", 0),
+                    uas=row.get("uas", 0)
                 )
+
+    def save_attendance_csv(self, path):
+        import csv
+        with open(path, "w", newline='', encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["nim", "nama", "hadir_persen"])
+            for nim, d in sorted(self._data.items()):
+                m = d["mhs"]
+                writer.writerow([nim, m.nama, m.hadir_persen])
+
+    def save_grades_csv(self, path):
+        import csv
+        with open(path, "w", newline='', encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["nim", "quiz", "tugas", "uts", "uas"])
+            for nim, d in sorted(self._data.items()):
+                n = d["nilai"]
+                writer.writerow([nim, n.quiz, n.tugas, n.uts, n.uas])

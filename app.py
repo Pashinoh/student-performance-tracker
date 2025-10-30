@@ -1,13 +1,19 @@
-"""App CLI untuk Student Performance Tracker."""
+"""Aplikasi CLI Student Performance Tracker."""
 
 import os
-from tracker import RekapKelas, build_markdown_report, save_text
+from tracker import (
+    RekapKelas,
+    build_markdown_report,
+    build_html_report,
+    save_text,
+)
 
 DATA_DIR = "data"
 OUT_DIR = "out"
 ATTENDANCE_CSV = os.path.join(DATA_DIR, "attendance.csv")
 GRADES_CSV = os.path.join(DATA_DIR, "grades.csv")
 OUT_REPORT = os.path.join(OUT_DIR, "report.md")
+OUT_HTML = os.path.join(OUT_DIR, "report.html")
 
 def ensure_dirs():
     os.makedirs(DATA_DIR, exist_ok=True)
@@ -21,13 +27,16 @@ def print_menu():
     print("4) Ubah nilai")
     print("5) Lihat rekap")
     print("6) Simpan laporan Markdown")
-    print("7) Keluar")
+    print("7) Simpan data ke CSV")
+    print("8) Tampilkan mahasiswa dengan nilai < 70")
+    print("9) Simpan laporan HTML berwarna")
+    print("10) Keluar")
 
 def input_non_empty(prompt):
     while True:
-        v = input(prompt).strip()
-        if v:
-            return v
+        val = input(prompt).strip()
+        if val:
+            return val
 
 def main():
     ensure_dirs()
@@ -35,68 +44,92 @@ def main():
 
     while True:
         print_menu()
-        pilih = input("Pilih menu: ").strip()
+        pilihan = input("Pilih menu: ").strip()
 
-        if pilih == "1":
+        if pilihan == "1":
             print("Memuat data dari CSV...")
             if os.path.exists(ATTENDANCE_CSV):
                 rk.load_attendance_csv(ATTENDANCE_CSV)
                 print(" - attendance.csv dimuat.")
+            else:
+                print(" - attendance.csv tidak ditemukan.")
             if os.path.exists(GRADES_CSV):
                 rk.load_grades_csv(GRADES_CSV)
                 print(" - grades.csv dimuat.")
-            if not os.path.exists(ATTENDANCE_CSV) and not os.path.exists(GRADES_CSV):
-                print("Tidak ada file CSV di folder data/")
+            else:
+                print(" - grades.csv tidak ditemukan.")
 
-        elif pilih == "2":
-            nim = input_non_empty("Masukkan NIM: ")
-            nama = input_non_empty("Masukkan Nama: ")
-            hadir = input("Persentase hadir (0-100): ").strip() or "0"
+        elif pilihan == "2":
+            nim = input_non_empty("NIM: ")
+            nama = input_non_empty("Nama: ")
+            hadir = input("Hadir (%): ").strip() or "0"
             try:
                 rk.tambah_mahasiswa(nim, nama, hadir)
                 print("Mahasiswa berhasil ditambahkan.")
             except Exception as e:
-                print("Error:", e)
+                print("Gagal:", e)
 
-        elif pilih == "3":
-            nim = input_non_empty("Masukkan NIM: ")
+        elif pilihan == "3":
+            nim = input_non_empty("NIM: ")
             hadir = input_non_empty("Persentase hadir baru: ")
             try:
                 rk.set_hadir(nim, hadir)
                 print("Presensi berhasil diperbarui.")
             except Exception as e:
-                print("Error:", e)
+                print("Gagal:", e)
 
-        elif pilih == "4":
-            nim = input_non_empty("Masukkan NIM: ")
+        elif pilihan == "4":
+            nim = input_non_empty("NIM: ")
             print("Kosongkan jika tidak ingin mengubah kolom tertentu.")
-            quiz = input("Nilai quiz: ").strip() or None
-            tugas = input("Nilai tugas: ").strip() or None
-            uts = input("Nilai UTS: ").strip() or None
-            uas = input("Nilai UAS: ").strip() or None
+            quiz = input("Quiz: ").strip() or None
+            tugas = input("Tugas: ").strip() or None
+            uts = input("UTS: ").strip() or None
+            uas = input("UAS: ").strip() or None
             try:
                 rk.set_penilaian(nim, quiz=quiz, tugas=tugas, uts=uts, uas=uas)
                 print("Nilai berhasil diperbarui.")
             except Exception as e:
-                print("Error:", e)
+                print("Gagal:", e)
 
-        elif pilih == "5":
+        elif pilihan == "5":
             records = rk.rekap()
             if not records:
-                print("Belum ada data mahasiswa.")
+                print("Belum ada data.")
             else:
                 print("\n| NIM | Nama | Hadir (%) | Nilai Akhir | Predikat |")
                 print("|---|---|---:|---:|:---:|")
                 for r in records:
                     print(f"| {r['nim']} | {r['nama']} | {r['hadir']:.1f} | {r['nilai_akhir']:.2f} | {r['predikat']} |")
 
-        elif pilih == "6":
+        elif pilihan == "6":
             records = rk.rekap()
             content = build_markdown_report(records)
             save_text(OUT_REPORT, content)
-            print(f"Laporan disimpan di {OUT_REPORT}")
+            print(f"Laporan Markdown disimpan ke {OUT_REPORT}")
 
-        elif pilih == "7":
+        elif pilihan == "7":
+            rk.save_attendance_csv(ATTENDANCE_CSV)
+            rk.save_grades_csv(GRADES_CSV)
+            print("Data berhasil disimpan ke folder data/")
+
+        elif pilihan == "8":
+            records = rk.filter_below(70)
+            if not records:
+                print("Tidak ada mahasiswa dengan nilai < 70.")
+            else:
+                print("\nMahasiswa dengan nilai < 70:")
+                print("| NIM | Nama | Hadir (%) | Nilai Akhir | Predikat |")
+                print("|---|---|---:|---:|:---:|")
+                for r in records:
+                    print(f"| {r['nim']} | {r['nama']} | {r['hadir']:.1f} | {r['nilai_akhir']:.2f} | {r['predikat']} |")
+
+        elif pilihan == "9":
+            records = rk.rekap()
+            html = build_html_report(records)
+            save_text(OUT_HTML, html)
+            print(f"Laporan HTML disimpan ke {OUT_HTML}")
+
+        elif pilihan == "10":
             print("Keluar dari aplikasi.")
             break
 

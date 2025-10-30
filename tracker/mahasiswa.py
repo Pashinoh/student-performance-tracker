@@ -1,7 +1,7 @@
-"""Kelas Mahasiswa: menyimpan identitas dan kehadiran."""
+"""Kelas Mahasiswa: menyimpan data identitas dan kehadiran."""
 
 class Mahasiswa:
-    """Representasi mahasiswa dengan data NIM, nama, dan persentase hadir."""
+    """Representasi mahasiswa dengan nim, nama, dan hadir persen."""
 
     def __init__(self, nim, nama, hadir_persen=0):
         self.nim = nim
@@ -20,7 +20,7 @@ class Mahasiswa:
         except ValueError:
             raise ValueError("Nilai hadir harus berupa angka.")
         if not 0 <= v <= 100:
-            raise ValueError("Persentase hadir harus antara 0-100.")
+            raise ValueError("Hadir harus antara 0 dan 100.")
         self._hadir_persen = v
 
     def info(self):
