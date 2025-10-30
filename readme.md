@@ -36,9 +36,9 @@ data/attendance.csv
 
 ```bash
 nim,nama,hadir_persen
-230101001,Ana,92
-230101002,Bimo,60
-230101003,Citra,80
+230101001,Egie,92.0
+230101002,Fiko,60.0
+23031093,Pradipta,99.0
 ```
 
 data/grades.csv
