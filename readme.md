@@ -16,18 +16,17 @@ OOP & Modularization Integration Project (Week 9–10)
 * `python -m venv venv`
 * `venv\Scripts\activate`  # Windows
 
-2. Run the program:
+2. Install dependencies:
+
+* `pip install -r requirements.txt`
+
+3. Run the program:
 
 * `python app.py`
 
 or
 
 * `python -m tracker`
-
-3. Install dependencies:
-
-* `pip install -r requirements.txt`
-
 ---
 
 ### Structure Csv
